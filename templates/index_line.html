@@ -20,7 +20,7 @@
         function fetchData() {
             $.ajax({
                 type: "GET",
-                url: "http://124.223.110.36:5678/lineChart",
+                url: "http://127.0.0.1:5678/lineChart",
                 dataType: 'json',
                 success: function (result) {
                     chart.setOption(result);
