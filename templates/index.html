@@ -20,7 +20,7 @@
         function fetchData() {
             $.ajax({
                 type: "GET",
-                url: "http://127.0.0.1:5678/barChart",
+                url: "http://0.0.0.0:5678/barChart",
                 dataType: 'json',
                 success: function (result) {
                     chart.setOption(result);
