@@ -3,13 +3,10 @@ from elasticsearch import Elasticsearch
 
 def get_everyday_avg_price():
     es = Elasticsearch([{"host":"124.223.110.36","port":9200}], timeout=60)
-    result = es.search(index='bkzf_data', doc_type='_doc')
-    total = result['hits']['total']['value']
     body = {
-        'from': 0,
-        'size': total
+        'size': 1000
     }
-    result = es.search(index='bkzf_data', doc_type='_doc', body=body)
+    result = es.search(index='bkzf_data', doc_type='_doc', body=body, scroll='8m')
     day_jiage = {}
     data_count = 0
     for i in result['hits']['hits']:
@@ -18,8 +15,20 @@ def get_everyday_avg_price():
             day_jiage[i['create_time']] = []
         day_jiage[i['create_time']].append(int(str(i['unitPriceStr']).strip('元/平')))
         data_count += 1
+    scroll_id = result['_scroll_id']
+    while 1:
+        result = es.scroll(scroll_id=scroll_id, scroll='8m')
+        if result['hits']['hits']:
+            for i in result['hits']['hits']:
+                i = i['_source']
+                if day_jiage.get(i['create_time']) == None:
+                    day_jiage[i['create_time']] = []
+                day_jiage[i['create_time']].append(int(str(i['unitPriceStr']).strip('元/平')))
+                data_count += 1
+        else:
+            break
     print(f'已获取{data_count}条数据')
-    # return list(day_jiage.keys()), [round(sum(i)/len(i), 2) for i in day_jiage.values()]
+    day_jiage = dict(sorted(day_jiage.items(),key=lambda x:x[0]))
     return list(day_jiage.keys()), list(day_jiage.values())
 
 
