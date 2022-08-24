@@ -83,4 +83,4 @@ def get_xq_avg_price_chart():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5678, debug=True)
+    app.run(host='0.0.0.0', port=5678, debug=True, threading=True)
