@@ -134,7 +134,7 @@ def index_xq_avg_price():
 
 
 @app.route("/4")
-def index_xq_avg_price():
+def index_xq_cjjl():
     return render_template("index_line_xqcjjl.html")
 
 
