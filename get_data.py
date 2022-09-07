@@ -2,9 +2,9 @@ from elasticsearch import Elasticsearch
 
 
 def get_everyday_avg_price():
-    es = Elasticsearch([{"host":"124.223.110.36","port":9200}], timeout=60)
+    es = Elasticsearch([{"host":"10.0.16.17","port":9200}], timeout=60)
     body = {
-        'size': 1000
+        'size': 5000
     }
     result = es.search(index='bkzf_data', doc_type='_doc', body=body, scroll='8m')
     day_jiage = {}
@@ -33,7 +33,7 @@ def get_everyday_avg_price():
 
 
 def get_xiaoqu_avg_price():
-    es = Elasticsearch([{"host": "124.223.110.36", "port": 9200}], timeout=60)
+    es = Elasticsearch([{"host": "10.0.16.17", "port": 9200}], timeout=60)
     result = es.search(index='bkzf_data', doc_type='_doc')
     total = result['hits']['total']['value']
     body = {
@@ -57,4 +57,33 @@ def get_xiaoqu_avg_price():
     return [i[0] for i in day_jiage_sorted], [i[1] for i in day_jiage_sorted]
 
 
-# get_xiaoqu_avg_price()
+def get_xq_cjjl():  # 获取小区成交记录数据
+    es = Elasticsearch([{"host":"10.0.16.17","port":9200}], timeout=60)
+    body = {
+        'size': 5000
+    }
+    result = es.search(index='bkzf_data_xq_cjjl', doc_type='_doc', body=body, scroll='8m')
+    day_jiage = {}
+    data_count = 0
+    for i in result['hits']['hits']:
+        i = i['_source']
+        xq_name = str(i['title']).split(' ')[0]
+        if day_jiage.get(xq_name) == None:
+            day_jiage[xq_name] = []
+        day_jiage[xq_name].append([str(i['signTime']).strip('签约日期：'), int(str(i['unitPrice']).strip('元/平'))])
+        data_count += 1
+    scroll_id = result['_scroll_id']
+    while 1:
+        result = es.scroll(scroll_id=scroll_id, scroll='8m')
+        if result['hits']['hits']:
+            for i in result['hits']['hits']:
+                i = i['_source']
+                xq_name = str(i['title']).split(' ')[0]
+                if day_jiage.get(xq_name) == None:
+                    day_jiage[xq_name] = []
+                day_jiage[xq_name].append([str(i['signTime']).strip('签约日期：'), int(str(i['unitPrice']).strip('元/平'))])
+                data_count += 1
+        else:
+            break
+    print(f'已获取{data_count}条数据')
+    return day_jiage
