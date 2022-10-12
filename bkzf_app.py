@@ -51,6 +51,7 @@ def line_base_xqcjjl() -> Line:
         for c, j in b.items():
             b[c] = int(sum(j) / len(j))
         result[k] = b
+    print(result)
     year = datetime.now().year
     month = datetime.now().month
     all_month = []
@@ -66,6 +67,7 @@ def line_base_xqcjjl() -> Line:
                 index = all_month.index(k)
                 y[index] = v
         result[key] = y
+    print(result)
     c = (
         Line(init_opts=opts.InitOpts(width="1000px", height="600px"))
         .add_xaxis(xaxis_data=all_month)

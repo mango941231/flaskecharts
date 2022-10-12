@@ -58,7 +58,7 @@ def get_xiaoqu_avg_price():
 
 
 def get_xq_cjjl():  # 获取小区成交记录数据
-    es = Elasticsearch([{"host":"10.0.16.17","port":9200}], timeout=60)
+    es = Elasticsearch([{"host":"124.223.110.36","port":9200}], timeout=60)
     body = {
         'size': 5000
     }
@@ -86,4 +86,8 @@ def get_xq_cjjl():  # 获取小区成交记录数据
         else:
             break
     print(f'已获取{data_count}条数据')
+    # print(day_jiage)
     return day_jiage
+
+
+# get_xq_cjjl()
