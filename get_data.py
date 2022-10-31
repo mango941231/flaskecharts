@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 
 
 def get_everyday_avg_price():
-    es = Elasticsearch([{"host":"10.0.16.17","port":9200}], timeout=60)
+    es = Elasticsearch([{"host":"10.0.16.17","port":9200}], http_auth=('elastic', '950106'), timeout=60)
     body = {
         'size': 5000
     }
@@ -33,7 +33,7 @@ def get_everyday_avg_price():
 
 
 def get_xiaoqu_avg_price():
-    es = Elasticsearch([{"host": "10.0.16.17", "port": 9200}], timeout=60)
+    es = Elasticsearch([{"host": "10.0.16.17", "port": 9200}], http_auth=('elastic', '950106'), timeout=60)
     result = es.search(index='bkzf_data', doc_type='_doc')
     total = result['hits']['total']['value']
     body = {
@@ -58,7 +58,7 @@ def get_xiaoqu_avg_price():
 
 
 def get_xq_cjjl():  # 获取小区成交记录数据
-    es = Elasticsearch([{"host":"124.223.110.36","port":9200}], timeout=60)
+    es = Elasticsearch([{"host":"124.223.110.36","port":9200}], http_auth=('elastic', '950106'), timeout=60)
     body = {
         'size': 5000
     }
